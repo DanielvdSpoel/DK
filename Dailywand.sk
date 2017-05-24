@@ -1,0 +1,333 @@
+options:
+	version: 1.0
+on load:
+	message "&8[&c&lDaily&f&lWand&8] &7Loading config files" to console
+	wait 1 second
+	message "&8[&c&lDaily&f&lWand&8] &7Auto-Update check" to console
+	set {D.version} to text from "https://pastebin.com/raw/WB6Uyzdg"
+	if {D.version} isn't {@version}:
+		message "&8[&c&lDaily&f&lWand&8] &7Er is een update beschikbaar, contacteer de developer voor de update!" to console
+on join:
+	if {D.version} isn't {@version}:
+		message "&8[&c&lDaily&f&lWand&8] &7Er is een update beschikbaar, contacteer de developer voor de update!"
+command /dailywand [<text>] [<offlineplayer>]:
+	aliases: /sw and /ew and /empirewand
+	trigger:
+		if arg-1 is set:
+			if player has permission "Dailywand.get":
+				if arg-2 is set:
+					if arg-2 is online:
+						set {_opc} to arg-2
+						give {_opc} a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81"
+						send "&8[&c&lDaily&f&lWand&8] &7Je hebt nu een &c&lDaily&f&lWand&7!!" to arg-2
+				else:
+					send "&8[&c&lDaily&f&lWand&8] &7Je hebt nu een &c&lDaily&f&lWand&7!!" to player
+					give player a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81"
+			else:
+				send "&8[&c&lDaily&f&lWand&8] &7Je hebt permission voor dit commando."
+		else:
+			send "&7&m---------------&8[&c&lDaily&f&lWand&7]&m---------------"
+			send ""
+			send "&c/dailywand get [Speler]"
+			send ""
+			send "&7&m----------&8[&fMade by DanielvdSpoel]&7&m---------"
+every second:
+	loop all players:
+		if {cooldown.%loop-player%} is 0:
+			stop
+		else:
+			remove 1 from {cooldown.%loop-player%}
+			stop
+			
+on right click holding a blaze rod:
+	name of the player's tool is "&c&lDaily&f&lWand":
+		player has permission "Dailywand.use"
+		if player isn't sneaking:
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &82"
+				message "&8&l✖ &6CrazyWolfs"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &82" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &83"
+				message "&8&l✖ &6Leap"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &83" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &84"
+				message "&8&l✖ &6Capture"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &84" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &85"
+				message "&8&l✖ &6DarkPulse"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &85" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &86"
+				message "&8&l✖ &6Heal"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &86" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &87"
+				message "&8&l✖ &6FireShield"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &87" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &81"
+				message "&8&l✖ &6Launch"
+				play raw sound "dig.glass" at player with pitch 1 volume 2
+				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
+				stop
+on projectile hit:
+	if event-entity is a fireball:
+		if metadata "Alive" of event-entity is set:
+			clear metadata "Alive" of event-entity
+		if metadata "CometSpell" of entity is true:
+			delete projectile
+			stopeffect id "%entity id of event-entity%1"
+			stopeffect id "%entity id of event-entity%2"
+			stopeffect id "%entity id of event-entity%3"
+			create a safe explosion of force 4 at event-entity
+			loop blocks in radius 3.5 around the entity:
+				block above loop-block is air or any tall grass:
+					loop-block isn't air, fire or any tall grass:
+						set block above loop-block to fire
+			stop
+		if metadata "ExplosiveSpell" of entity is true:
+			delete projectile
+			stopeffect id "%entity id of event-entity%1"
+			stopeffect id "%entity id of event-entity%2"
+			create a safe explosion of force 4 at event-entity
+			spawn a primed tnt at event-entity
+			set fuse time of last spawned primed tnt to 0
+			stop
+		if metadata "RainBowBall" of entity is true:
+			delete projectile
+			create a safe explosion of force 4 at event-entity
+			loop 5 times:
+				launch firework at event-entity timed 1
+				launch firework at event-entity timed 2
+				launch firework at event-entity timed 3
+			stop
+		if metadata "Knockbackball" of entity is true:
+			delete projectile
+			loop all living entities in radius 6 around the event-entity:
+				set {_fo} to 0.6 * (6 - distance between event-location and loop-entity)
+				push loop-entity direction from location 3 blocks under event-location to loop-entity with force {_fo}
+				launch "BALL" firework at event-location timed 0 coloured "RED"
+				loop firework rockets in radius 1 of event-location:
+					add "{LifeTime:2}" to nbt of loop-entity-2
+			stop
+
+on left click holding a blaze rod:
+	name of player's tool is "&c&lDaily&f&lWand":
+		player has permission "skywand.use":
+			cancel event
+			if {cooldown.%player%} is 0:
+				if lore of player's tool is "&6Spell: &81":
+					set {cooldown.%player%} to 20
+					if target living entity is set:
+						drawDot count 4, particle "Smokelarge", XYZ 1, 1, 1, center location of target living entity, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+						drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center location of target living entity, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+						loop all living entities in radius 5 around target living entity:
+							push loop-entity upwards at speed 2
+							drawDot count 1, particle "Smokelarge", XYZ 1, 1, 1, center loop-entity, visibleRange 320, pulseDelay 0, keepFor 20 ticks
+						push target living entity upwards at speed 2
+						drawDot count 1, particle "Smokelarge", XYZ 1, 1, 1, center target living entity, visibleRange 320, pulseDelay 0, keepFor 20 ticks
+						stop
+					if target block is set:
+						distance between player and target block is less than 100:
+							drawDot count 4, particle "Smokelarge", XYZ 1, 1, 1, center location of target block, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+							drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center location of target block, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+							loop all living entities in radius 5 around target block:
+								push loop-entity upwards at speed 2
+								drawDot count 1, particle "Smokelarge", XYZ 1, 1, 1, center loop-entity, visibleRange 320, pulseDelay 0, keepFor 20 ticks
+							stop
+					set {_ll} to location of block 30 in front of the player
+					drawDot count 4, particle "Smokelarge", XYZ 1, 1, 1, center {_ll}, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+					drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center {_ll}, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+					loop all living entities in radius 5 around {_ll}:
+						push loop-entity upwards at speed 2
+						drawDot count 1, particle "Smokelarge", XYZ 1, 1, 1, center loop-entity, visibleRange 320, pulseDelay 0, keepFor 20 ticks
+					stop
+				if lore of player's tool is "&6Spell: &82":
+					set {cooldown.%player%} to 20
+					if target living entity is set:
+						set {_t} to target living entity
+						set {_n} to 0
+						loop 4 times:
+							spawn wolf above location of target block
+							add 1 to {_n}
+							set {_wolf%{_n}%.%player%} to spawned wolf
+						DrawWarpRings style 1, particle "redstone", RGB 80, 255, 255, center location of {_wolf1.%player%}, id "%player%", rainbowMode true, scan true, height 2, radius 1, ringCount 40, ringDensity 20, visibleRange 32, pulseDelay 2
+						wait 10 tick
+						make {_t} damage {_wolf1.%player%} and {_wolf2.%player%} and {_wolf3.%player%} and {_wolf4.%player%} by 1
+						wait 1 second
+						stopeffect id "%player%"
+						wait 5 seconds
+						kill {_wolf1.%player%} and {_wolf2.%player%} and {_wolf3.%player%} and {_wolf4.%player%}
+						stop
+					if target block is set:
+						loop all living entities in radius 6 around target block:
+							if loop-entity isn't player:
+								set {_t} to loop-entity
+						set {_n} to 0
+						loop 4 times:
+							spawn wolf above location of target block
+							add 1 to {_n}
+							set {_wolf%{_n}%.%player%} to spawned wolf
+						DrawWarpRings style 1, particle "redstone", RGB 80, 255, 255, center location of {_wolf1.%player%}, id "%player%", rainbowMode true, scan true, height 2, radius 1, ringCount 40, ringDensity 20, visibleRange 32, pulseDelay 2
+						wait 10 tick
+						make {_t} damage {_wolf1.%player%} and {_wolf2.%player%} and {_wolf3.%player%} and {_wolf4.%player%} by 1
+						wait 1 second
+						stopeffect id "%player%"
+						wait 5 seconds
+						kill {_wolf1.%player%} and {_wolf2.%player%} and {_wolf3.%player%} and {_wolf4.%player%}
+						stop
+				if lore of player's tool is "&6Spell: &85":
+					set {cooldown.%player%} to 20
+					if target block is set:
+						if block above target block is air or grass:
+							launch "BURST" firework at location above target block timed 0 coloured "black"
+							drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center location above target block, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+							loop firework rockets in radius 1 of location above target block:
+								add "{LifeTime:2}" to nbt of loop-entity
+							loop all living entities in radius 3 around location above target block:
+								damage loop-entity by 3
+						else:
+							loop blocks in radius 2 around target block:
+								if loop-block is air:
+									launch "BURST" firework at loop-block timed 0 coloured "black"
+									loop firework rockets in radius 1 of loop-block:
+										add "{LifeTime:2}" to nbt of loop-entity
+									drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center location of loop-block, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+									loop all living entities in radius 3 around loop-block:
+										damage loop-entity by 3
+									stop
+					else:
+						launch "BURST" firework at block 30 in front of the player timed 0 coloured "black"
+						drawDot count 4, particle "witchspell", XYZ 1, 1, 1, center location of block 30 in front of the player, visibleRange 320, pulseDelay 0, keepFor 10 ticks
+						loop firework rockets in radius 1 of block 30 in front of the player:
+							add "{LifeTime:2}" to nbt of loop-entity
+						loop all living entities in radius 3 around block 30 in front of the player:
+							damage loop-entity by 4
+					stop
+				if lore of player's tool is "&6Spell: &83":
+					set {cooldown.%player%} to 20
+					push player upwards at speed 2
+					push player in the direction of player with force 3
+					play raw sound "mob.endermen.portal" at player with pitch 1 volume 100
+					DrawDot count 5, particle "itemcrack", material eye of ender, XYZ 0.5, 0.5, 0.5, center player, visibleRange 320, pulseDelay 0, keepFor 5 seconds
+					wait 3 tick
+					while ground state of player is false:
+						wait 1 tick
+					drawWarpRings style 27, particle "portal", center player, id "leap.%player%", scan true, height 0, radius 2, ringCount 40, ringDensity 20, visibleRange 50, displacementXYZ 0, 2, 0
+					wait 3 seconds
+					stopeffect id "leap.%player%"
+				if lore of player's tool is "&6Spell: &84":
+					set {cooldown.%player%} to 20
+					if passenger of the player is a living entity:
+						stopEffect id "%entity id of passenger of the player%"
+						set {_pa} to passenger of the player
+						make {_pa} leave from the vehicle
+						push {_pa} in the direction of the player at speed 2
+						stop
+					if target living entity is set:
+						if distance between player and target living entity is less than 25:
+							make target living entity ride player
+							drawDot count 10, particle "portal", XYZ 1, 1, 1, center target living entity, id "%entity id of target living entity%", visibleRange 320, pulseDelay 0, keepFor 10 seconds
+							play raw sound "mob.endermen.portal" at player with pitch 1 volume 100
+					stop
+				if lore of player's tool is "&6Spell: &85":
+					set {cooldown.%player%} to 20
+					if target living entity is set:
+						loop 10 times:
+							drawLine particle smokelarge, XYZ 0.5, 0.5, 0.5, center player, target location of target living entity, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 0, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+							drawLine particle smoke, XYZ 2, 2, 2, center player, target location of target living entity, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 0, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+						set {_ta} to location of target living entity
+						wait 1.3 second
+						create a safe explosion of force 5 at {_ta}
+						loop all living entities in radius 4 around {_ta}:
+							damage loop-entity by 6
+						stop
+					if target block is set:
+						loop 10 times:
+							drawLine particle smokelarge, XYZ 0.5, 0.5, 0.5, center player, target location of target block, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 0, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+							drawLine particle smoke, XYZ 2, 2, 2, center player, target location of target block, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 0, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+						set {_ta} to location of target block
+						wait 1.3 second
+						create a safe explosion of force 5 at {_ta}
+						loop all living entities in radius 4 around {_ta}:
+							damage loop-entity by 6
+						stop
+					loop 10 times:
+						drawLine particle smokelarge, XYZ 0.5, 0.5, 0.5, center player, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 70, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+						drawLine particle smoke, XYZ 2, 2, 2, center player, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 70, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
+				if lore of player's tool is "&6Spell: &86":
+					set {cooldown.%player%} to 20
+					apply regeneration 2 to the player for 10 seconds
+					set absorption hearts of player to 14
+					drawComplexCircle particle "heart", center player, id "%player%-heal1", randomRotation true, radius .8, density 20, start 0, visibleRange 100, xRotation 23, yRotation 120, zRotation 0
+					drawComplexCircle particle "heart", center player, id "%player%-heal2", randomRotation false, radius .8, density 20, start 0, visibleRange 100, xRotation 70, yRotation 10, zRotation 0
+					drawComplexCircle particle "heart", center player, id "%player%-heal3", randomRotation false, radius .8, density 20, start 0, visibleRange 100, xRotation 0, yRotation 60, zRotation 0
+					drawComplexCircle particle "heart", center player, id "%player%-heal4", randomRotation true, radius .8, density 20, start 0, visibleRange 100, xRotation 25, yRotation 54, zRotation 0
+					wait 3 seconds
+					stopeffect id "%player%-heal1"
+					stopeffect id "%player%-heal2"
+					stopeffect id "%player%-heal3"
+					stopeffect id "%player%-heal4"
+				if lore of player's tool is "&6Spell: &87":
+					set {cooldown.%player%} to 20
+					if {FireShield.%player%} is true:
+						set {FireShield.%player%} to false
+						stopeffect id "sh.%player%"
+						stopeffect id "sh1.%player%"
+						stop
+					set {FireShield.%player%} to true
+					drawSphere style 1, particle "flame", center player, id "sh.%player%", rainbowMode true, radius 3, density 50, visibleRange 100, pulseDelay 1
+					drawSphere style 1, particle "smokelarge", center player, id "sh1.%player%", rainbowMode true, radius 3, density 50, visibleRange 100, pulseDelay 1
+					while {FireShield.%player%} is true:
+						loop all living entities in radius 3 around player:
+							if loop-entity isn't player:
+								ignite loop-entity
+						wait 10 tick
+			else:
+				message "&6je hebt nog &8%{cooldown.%player%}% &6seconden cooldown"
+on projectile hit:
+	if projectile is an arrow:
+		if metadata "Alive" of projectile is "true":
+			set metadata "Alive" of projectile to "false"
+			create a safe explosion of force 10 at event-entity
+			launch "BALL_LARGE" firework at event-location timed 0 coloured "red" and "black"
+			loop firework rockets in radius 1 of event-location:
+				add "{LifeTime:2}" to nbt of loop-entity
+			delete projectile
+			loop blocks in radius 3 around event-entity:
+				if loop-block isn't bedrock:
+					spawn falling block of loop-block at loop-block
+					set loop-block to air
+					push last spawned entity upwards with force 2
+					push last spawned entity direction from event-location to last spawned entity with force -0.5
+			spawn a primed tnt at event-entity
+			set fuse time of last spawned primed tnt to 0
+on damage:
+	attacker has blaze rod in hand
+	name of the attacker's tool is "&c&lDaily&f&lWand":
+		cancel event
+command /stopcooldown [<text>]:
+	trigger:
+		set {cooldown.%arg-1%} to 0
+		message "&6done"
+on quit:
+	if {FireShield.%player%} is true:
+		set {FireShield.%player%} to false
+		stopeffect id "sh.%player%"
+		stopeffect id "sh1.%player%"
+		stop
