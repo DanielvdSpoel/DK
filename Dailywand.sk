@@ -1,86 +1,129 @@
 options:
 	version: 1.0
+	prefix: &8[&c&lDaily&f&lWand&8] &7
 on load:
-	message "&8[&c&lDaily&f&lWand&8] &7Loading config files" to console
+	message "{@prefix}Loading config files" to console
 	wait 1 second
-	message "&8[&c&lDaily&f&lWand&8] &7Auto-Update check" to console
+	message "{@prefix}Auto-Update check" to console
 	set {D.version} to text from "https://pastebin.com/raw/WB6Uyzdg"
 	if {D.version} isn't {@version}:
-		message "&8[&c&lDaily&f&lWand&8] &7Er is een update beschikbaar, contacteer de developer voor de update!" to console
+		message "{@prefix}Er is een update beschikbaar, contacteer de developer voor de update!" to console
 on join:
 	if {D.version} isn't {@version}:
-		message "&8[&c&lDaily&f&lWand&8] &7Er is een update beschikbaar, contacteer de developer voor de update!"
+		message "{@prefix}Er is een update beschikbaar, contacteer de developer voor de update!"
+on join:
+	set {cooldown.%player%} to 0
+on quit:
+	if {FireShield.%player%} is true:
+		set {FireShield.%player%} to false
+		stopeffect id "sh.%player%"
+		stopeffect id "sh1.%player%"
+		stop
 command /dailywand [<text>] [<offlineplayer>]:
 	aliases: /sw and /ew and /empirewand
 	trigger:
-		if arg-1 is set:
-			if player has permission "Dailywand.get":
+		if arg-1 is "give":
+			if player has permission "dailywand.get":
 				if arg-2 is set:
 					if arg-2 is online:
 						set {_opc} to arg-2
-						give {_opc} a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81"
-						send "&8[&c&lDaily&f&lWand&8] &7Je hebt nu een &c&lDaily&f&lWand&7!!" to arg-2
+						give {_opc} a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Launch"
+						send "{@prefix}Je hebt nu een &c&lDaily&f&lWand&7!!" to arg-2
 				else:
-					send "&8[&c&lDaily&f&lWand&8] &7Je hebt nu een &c&lDaily&f&lWand&7!!" to player
-					give player a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81"
+					send "{@prefix}Je hebt nu een &c&lDaily&f&lWand&7!!" to player
+					give player a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Launch"
+			else:
+				send "&8[&c&lDaily&f&lWand&8] &7Je hebt permission voor dit commando."
+		if arg-1 is "get":
+			if player has permission "dailywand.get":
+				if arg-2 is set:
+					if arg-2 is online:
+						set {_opc} to arg-2
+						give {_opc} a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Launch"
+						send "{@prefix}Je hebt nu een &c&lDaily&f&lWand&7!!" to arg-2
+				else:
+					send "{@prefix}Je hebt nu een &c&lDaily&f&lWand&7!!" to player
+					give player a blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Launch"
+			else:
+				send "&8[&c&lDaily&f&lWand&8] &7Je hebt permission voor dit commando."
+		if arg-1 is "version":
+			if player has permission "dailywand.version":
+				message "{@prefix}De versie van de plugin is &8{@version}"
+				stop
+			else:
+				send "&8[&c&lDaily&f&lWand&8] &7Je hebt permission voor dit commando."
+		if arg-1 is "update":
+			if player has permission "dailywand.update":
+				message "{@prefix}Zoeken naar de download"
+				wait 1 second
+				message "{@prefix}Download gevonden"
+				wait 1 second
+				message "{@prefix}Downloaden gestart"
+				download file from "https://github.cm/tim740/skUtilities/releases/download/v0.8.8/skUtilities.v0.8.8.jar" to file "plugins\skutilDLFU.jar"
+				wait 1 second
+				message "{@prefix}Plugin succesvol ge-update"
+				stop
 			else:
 				send "&8[&c&lDaily&f&lWand&8] &7Je hebt permission voor dit commando."
 		else:
 			send "&7&m---------------&8[&c&lDaily&f&lWand&7]&m---------------"
 			send ""
 			send "&c/dailywand get [Speler]"
+			send "&c/dailywand give [Speler]"
+			send "&c/dailywand version"
+			send "&c/dailywand update [Speler]"
 			send ""
-			send "&7&m----------&8[&fMade by DanielvdSpoel]&7&m---------"
+			send "&7&m----------&8[&fWil je de DkWand? /Shop]&7&m---------"
+
 every second:
 	loop all players:
 		if {cooldown.%loop-player%} is 0:
 			stop
 		else:
 			remove 1 from {cooldown.%loop-player%}
-			stop
-			
+
 on right click holding a blaze rod:
 	name of the player's tool is "&c&lDaily&f&lWand":
 		player has permission "Dailywand.use"
 		if player isn't sneaking:
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &81" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &82"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Launch" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8CrazyWolfs"
 				message "&8&l✖ &6CrazyWolfs"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &82" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &83"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8CrazyWolfs" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8Leap"
 				message "&8&l✖ &6Leap"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &83" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &84"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Leap" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8Capture"
 				message "&8&l✖ &6Capture"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &84" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &85"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Capture" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8DarkPulse"
 				message "&8&l✖ &6DarkPulse"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &85" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &86"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8DarkPulse" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8Heal"
 				message "&8&l✖ &6Heal"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &86" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &87"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8Heal" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8FireShield"
 				message "&8&l✖ &6FireShield"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
 				stop
-			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &87" in hand:
-				set line 1 of lore of player's tool to "&6Spell: &81"
+			if player has blaze rod named "&c&lDaily&f&lWand" with lore "&6Spell: &8FireShield" in hand:
+				set line 1 of lore of player's tool to "&6Spell: &8Launch"
 				message "&8&l✖ &6Launch"
 				play raw sound "dig.glass" at player with pitch 1 volume 2
 				drawDot count 5, particle "blockcrack", material portal, XYZ 0, 0, 0, center player's head, visibleRange 320, pulseDelay 0, keepFor 3 ticks
@@ -131,7 +174,7 @@ on left click holding a blaze rod:
 		player has permission "skywand.use":
 			cancel event
 			if {cooldown.%player%} is 0:
-				if lore of player's tool is "&6Spell: &81":
+				if lore of player's tool is "&6Spell: &8Launch":
 					set {cooldown.%player%} to 20
 					if target living entity is set:
 						drawDot count 4, particle "Smokelarge", XYZ 1, 1, 1, center location of target living entity, visibleRange 320, pulseDelay 0, keepFor 10 ticks
@@ -157,7 +200,7 @@ on left click holding a blaze rod:
 						push loop-entity upwards at speed 2
 						drawDot count 1, particle "Smokelarge", XYZ 1, 1, 1, center loop-entity, visibleRange 320, pulseDelay 0, keepFor 20 ticks
 					stop
-				if lore of player's tool is "&6Spell: &82":
+				if lore of player's tool is "&6Spell: &8CrazyWolfs":
 					set {cooldown.%player%} to 20
 					if target living entity is set:
 						set {_t} to target living entity
@@ -191,7 +234,7 @@ on left click holding a blaze rod:
 						wait 5 seconds
 						kill {_wolf1.%player%} and {_wolf2.%player%} and {_wolf3.%player%} and {_wolf4.%player%}
 						stop
-				if lore of player's tool is "&6Spell: &85":
+				if lore of player's tool is "&6Spell: &8DarkPulse":
 					set {cooldown.%player%} to 20
 					if target block is set:
 						if block above target block is air or grass:
@@ -219,7 +262,7 @@ on left click holding a blaze rod:
 						loop all living entities in radius 3 around block 30 in front of the player:
 							damage loop-entity by 4
 					stop
-				if lore of player's tool is "&6Spell: &83":
+				if lore of player's tool is "&6Spell: &8Leap":
 					set {cooldown.%player%} to 20
 					push player upwards at speed 2
 					push player in the direction of player with force 3
@@ -231,7 +274,7 @@ on left click holding a blaze rod:
 					drawWarpRings style 27, particle "portal", center player, id "leap.%player%", scan true, height 0, radius 2, ringCount 40, ringDensity 20, visibleRange 50, displacementXYZ 0, 2, 0
 					wait 3 seconds
 					stopeffect id "leap.%player%"
-				if lore of player's tool is "&6Spell: &84":
+				if lore of player's tool is "&6Spell: &8Capture":
 					set {cooldown.%player%} to 20
 					if passenger of the player is a living entity:
 						stopEffect id "%entity id of passenger of the player%"
@@ -270,7 +313,7 @@ on left click holding a blaze rod:
 					loop 10 times:
 						drawLine particle smokelarge, XYZ 0.5, 0.5, 0.5, center player, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 70, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
 						drawLine particle smoke, XYZ 2, 2, 2, center player, id "%random number between 0 and 100000%", rainbowMode false, solid false, density 2, length 70, zigZag count 0, height 0, visibleRange 100, displacementXYZ 0, 0, 0, pulseDelay 1
-				if lore of player's tool is "&6Spell: &86":
+				if lore of player's tool is "&6Spell: &8Heal":
 					set {cooldown.%player%} to 20
 					apply regeneration 2 to the player for 10 seconds
 					set absorption hearts of player to 14
@@ -283,14 +326,14 @@ on left click holding a blaze rod:
 					stopeffect id "%player%-heal2"
 					stopeffect id "%player%-heal3"
 					stopeffect id "%player%-heal4"
-				if lore of player's tool is "&6Spell: &87":
-					set {cooldown.%player%} to 20
+				if lore of player's tool is "&6Spell: &8FireShield":
 					if {FireShield.%player%} is true:
 						set {FireShield.%player%} to false
 						stopeffect id "sh.%player%"
 						stopeffect id "sh1.%player%"
 						stop
 					set {FireShield.%player%} to true
+					set {cooldown.%player%} to 20
 					drawSphere style 1, particle "flame", center player, id "sh.%player%", rainbowMode true, radius 3, density 50, visibleRange 100, pulseDelay 1
 					drawSphere style 1, particle "smokelarge", center player, id "sh1.%player%", rainbowMode true, radius 3, density 50, visibleRange 100, pulseDelay 1
 					while {FireShield.%player%} is true:
@@ -325,9 +368,12 @@ command /stopcooldown [<text>]:
 	trigger:
 		set {cooldown.%arg-1%} to 0
 		message "&6done"
-on quit:
-	if {FireShield.%player%} is true:
-		set {FireShield.%player%} to false
-		stopeffect id "sh.%player%"
-		stopeffect id "sh1.%player%"
-		stop
+
+command /chatkleur [<text>]:
+	trigger:
+		if arg-1 is set:
+
+		if arg-1 is not set:
+command /1234:
+	trigger:
+		message "ja ja het werkt!"
